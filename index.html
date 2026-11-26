@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOG MODS — Minecraft Bedrock & Java Mod Repository</title>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            obsidian: {
+              950: '#090c10',
+              900: '#0d1117',
+              850: '#11161d',
+              800: '#161d26',
+              700: '#212b38',
+              600: '#2e3c4e',
+            },
+            emeraldmc: {
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    /* Subtle Minecraft voxel grid pattern */
+    .voxel-grid {
+      background-image: 
+        linear-gradient(to right, rgba(34, 197, 94, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(34, 197, 94, 0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .mod-card {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .mod-card:hover {
+      transform: translateY(-4px);
+      border-color: #22c55e;
+      box-shadow: 0 12px 28px -10px rgba(34, 197, 94, 0.22);
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0d1117;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #212b38;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #22c55e;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-obsidian-900 text-gray-100 selection:bg-emeraldmc-500 selection:text-obsidian-950">
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-obsidian-950/90 backdrop-blur-md border-b border-obsidian-700/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Brand Logo -->
+        <button onclick="navigateTo('home')" class="flex items-center gap-3 text-left group focus:outline-none">
+          <!-- Custom SVG Voxel Wolf in Emerald Armor -->
+          <div class="w-10 h-10 rounded-lg bg-obsidian-800 border border-emeraldmc-500/40 flex items-center justify-center shadow-lg group-hover:border-emeraldmc-400 transition">
+            <svg viewBox="0 0 32 32" class="w-8 h-8" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="3" width="6" height="6" fill="#16a34a"/>
+              <rect x="22" y="3" width="6" height="6" fill="#16a34a"/>
+              <rect x="6" y="5" width="2" height="2" fill="#4ade80"/>
+              <rect x="24" y="5" width="2" height="2" fill="#4ade80"/>
+              <rect x="6" y="7" width="20" height="5" fill="#22c55e"/>
+              <rect x="14" y="8" width="4" height="4" fill="#86efac"/>
+              <rect x="6" y="12" width="20" height="14" fill="#d1d5db"/>
+              <rect x="4" y="14" width="2" height="10" fill="#9ca3af"/>
+              <rect x="26" y="14" width="2" height="10" fill="#9ca3af"/>
+              <rect x="8" y="15" width="4" height="3" fill="#111827"/>
+              <rect x="8" y="15" width="2" height="2" fill="#4ade80"/>
+              <rect x="20" y="15" width="4" height="3" fill="#111827"/>
+              <rect x="22" y="15" width="2" height="2" fill="#4ade80"/>
+              <rect x="11" y="18" width="10" height="8" fill="#f3f4f6"/>
+              <rect x="14" y="19" width="4" height="3" fill="#1f2937"/>
+              <rect x="6" y="26" width="20" height="4" fill="#15803d"/>
+              <rect x="14" y="26" width="4" height="4" fill="#4ade80"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-xl tracking-tight text-white">DOG <span class="text-emeraldmc-500">MODS</span></span>
+              <span class="hidden sm:inline-block text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-emeraldmc-500/15 text-emeraldmc-400 border border-emeraldmc-500/30">MC ONLY</span>
+            </div>
+            <p class="text-[11px] text-gray-400 leading-none">Bedrock & Java Mods</p>
+          </div>
+        </button>
+
+        <!-- Desktop Nav Links -->
+        <nav class="hidden md:flex items-center gap-1.5">
+          <button data-nav="home" onclick="navigateTo('home')" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium text-white bg-obsidian-800 transition">Home</button>
+          <button data-nav="browse" onclick="navigateTo('browse')" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-obsidian-800 transition">Browse Mods</button>
+          <button data-nav="upload" onclick="navigateTo('upload')" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-obsidian-800 transition flex items-center gap-1.5">
+            <span class="text-emeraldmc-400 font-bold">+</span> Upload Mod
+          </button>
+          <button id="nav-admin-btn" data-nav="admin" onclick="navigateTo('admin')" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium text-amber-400 hover:bg-amber-500/10 border border-amber-500/30 transition flex items-center gap-1.5">
+            <span>Admin</span>
+            <span id="admin-pending-badge" class="hidden px-1.5 py-0.2 text-xs rounded-full bg-amber-500 text-obsidian-950 font-bold">0</span>
+          </button>
+        </nav>
+
+        <!-- Admin Unlock Controls & Mobile Toggle -->
+        <div class="flex items-center gap-2.5">
+          <!-- Locked Admin Button -->
+          <div id="guest-actions" class="flex items-center gap-2">
+            <button onclick="openAuthModal()" class="px-3.5 py-2 rounded-lg text-sm font-semibold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 transition flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              <span>Admin Code</span>
+            </button>
+          </div>
+
+          <!-- Unlocked Admin Badge -->
+          <div id="user-actions" class="hidden items-center gap-2.5">
+            <button onclick="navigateTo('admin')" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 transition">
+              <div class="w-6 h-6 rounded bg-amber-500/30 border border-amber-400/50 flex items-center justify-center text-xs font-bold text-amber-300">A</div>
+              <span class="text-sm font-semibold text-amber-300">Admin Unlocked</span>
+            </button>
+            <button onclick="handleLogout()" title="Lock Admin" class="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-obsidian-800 border border-transparent hover:border-obsidian-700 transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            </button>
+          </div>
+
+          <!-- Mobile Hamburger -->
+          <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-obsidian-800 border border-obsidian-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-obsidian-950 border-b border-obsidian-700 px-4 pt-2 pb-4 space-y-1.5">
+      <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-200 hover:bg-obsidian-800">Home</button>
+      <button onclick="navigateTo('browse'); toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-200 hover:bg-obsidian-800">Browse All Mods</button>
+      <button onclick="navigateTo('upload'); toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-emeraldmc-400 hover:bg-obsidian-800">+ Upload Minecraft Mod</button>
+      <button id="mobile-admin-btn" onclick="navigateTo('admin'); toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-amber-400 hover:bg-obsidian-800">Admin Dashboard</button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow">
+
+    <!-- ==================== 1. HOME VIEW ==================== -->
+    <section id="view-home" class="view-section">
+      <!-- Hero Section -->
+      <div class="relative overflow-hidden border-b border-obsidian-700/80 bg-obsidian-950 voxel-grid">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+          <div class="max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emeraldmc-500/10 border border-emeraldmc-500/30 text-emeraldmc-400 text-xs font-mono mb-5">
+              <span class="w-2 h-2 rounded-full bg-emeraldmc-400 animate-pulse"></span>
+              100% MINECRAFT BEDROCK & JAVA MODS
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              Level Up Your World with <span class="text-emeraldmc-500">DOG MODS</span>
+            </h1>
+            <p class="mt-4 text-base sm:text-lg text-gray-400 leading-relaxed">
+              Discover, share, and download verified community mods, behavior packs, worlds, and shaders built exclusively for <strong class="text-gray-200">Minecraft Bedrock</strong> and <strong class="text-gray-200">Minecraft Java Edition</strong>.
+            </p>
+
+            <!-- Hero Search & Quick Filter -->
+            <div class="mt-8 flex flex-col sm:flex-row gap-3">
+              <div class="relative flex-grow">
+                <svg class="w-5 h-5 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input
+                  id="home-search-input"
+                  type="text"
+                  placeholder="Search Minecraft mods by name (e.g., Wolf, Netherite, Shaders)..."
+                  oninput="handleHomeSearch(this.value)"
+                  class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-obsidian-800 border border-obsidian-600 text-white placeholder-gray-400 focus:outline-none focus:border-emeraldmc-500 focus:ring-1 focus:ring-emeraldmc-500 transition"
+                />
+              </div>
+              <button onclick="navigateTo('upload')" class="px-6 py-3.5 rounded-xl bg-emeraldmc-600 hover:bg-emeraldmc-500 text-white font-semibold shadow-lg shadow-emeraldmc-950/60 transition flex items-center justify-center gap-2 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                Upload Mod
+              </button>
+            </div>
+
+            <!-- Edition Quick Filter Pills -->
+            <div class="mt-5 flex flex-wrap items-center gap-2">
+              <span class="text-xs font-mono text-gray-400 mr-1">EDITION:</span>
+              <button onclick="setEditionFilter('ALL')" data-edition-pill="ALL" class="edition-pill px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emeraldmc-600 text-white border border-emeraldmc-500 transition">All Editions</button>
+              <button onclick="setEditionFilter('Minecraft Bedrock')" data-edition-pill="Minecraft Bedrock" class="edition-pill px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-800 text-gray-300 hover:text-white border border-obsidian-700 transition">Minecraft Bedrock (.mcaddon / .mcpack)</button>
+              <button onclick="setEditionFilter('Minecraft Java')" data-edition-pill="Minecraft Java" class="edition-pill px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-800 text-gray-300 hover:text-white border border-obsidian-700 transition">Minecraft Java (.jar / .zip)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home Listings Container -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+        <!-- Search Results Banner (Visible only when searching or filtering on Home) -->
+        <div id="home-filtered-section" class="hidden">
+          <div class="flex items-center justify-between mb-5">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-white">Matching Minecraft Mods</h2>
+              <p id="home-filter-subtitle" class="text-sm text-gray-400">Filtered results</p>
+            </div>
+            <button onclick="resetHomeFilters()" class="text-xs font-semibold text-emeraldmc-400 hover:text-emeraldmc-300 underline">Clear Filters</button>
+          </div>
+          <div id="home-filtered-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+        </div>
+
+        <!-- Popular Mods Section -->
+        <div id="home-popular-section">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-6 rounded-sm bg-emeraldmc-500"></span>
+              <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-white">Popular Minecraft Mods</h2>
+                <p class="text-xs sm:text-sm text-gray-400">Most downloaded Bedrock & Java mods by the community</p>
+              </div>
+            </div>
+            <button onclick="navigateTo('browse')" class="text-sm font-semibold text-emeraldmc-400 hover:text-emeraldmc-300 flex items-center gap-1">
+              View All <span>&rarr;</span>
+            </button>
+          </div>
+          <div id="popular-mods-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="col-span-full py-10 px-4 text-center bg-obsidian-800/60 border border-obsidian-700 rounded-2xl">
+              <p class="text-gray-300 font-semibold text-sm">No Minecraft mods have been uploaded yet.</p>
+              <p class="text-gray-400 text-xs mt-1">Be the first to share a Minecraft Bedrock or Java mod with the community!</p>
+              <button onclick="navigateTo('upload')" class="mt-4 px-5 py-2 rounded-xl bg-emeraldmc-600 hover:bg-emeraldmc-500 text-white text-xs font-bold transition">
+                + Upload First Mod
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Latest Mods Section -->
+        <div id="home-latest-section">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-6 rounded-sm bg-emeraldmc-400"></span>
+              <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-white">Latest Uploads</h2>
+                <p class="text-xs sm:text-sm text-gray-400">Freshly approved Minecraft mods & packs</p>
+              </div>
+            </div>
+            <button onclick="navigateTo('browse')" class="text-sm font-semibold text-emeraldmc-400 hover:text-emeraldmc-300 flex items-center gap-1">
+              Browse Catalog <span>&rarr;</span>
+            </button>
+          </div>
+          <div id="latest-mods-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="col-span-full py-10 px-4 text-center bg-obsidian-800/60 border border-obsidian-700 rounded-2xl">
+              <p class="text-gray-400 text-sm">No latest uploads yet. Uploaded mods will appear here once approved.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 2. BROWSE ALL MODS VIEW ==================== -->
+    <section id="view-browse" class="view-section hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-obsidian-700">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Browse Minecraft Mods</h1>
+            <p class="text-sm text-gray-400 mt-1">Filter by Minecraft Edition, sort by popularity or release date</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <input
+              id="browse-search-input"
+              type="text"
+              placeholder="Filter mods by name..."
+              oninput="renderBrowseGrid()"
+              class="px-4 py-2.5 rounded-xl bg-obsidian-800 border border-obsidian-600 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-emeraldmc-500 w-full sm:w-64"
+            />
+            <select id="browse-edition-select" onchange="renderBrowseGrid()" class="px-3.5 py-2.5 rounded-xl bg-obsidian-800 border border-obsidian-600 text-sm text-white focus:outline-none focus:border-emeraldmc-500">
+              <option value="ALL">All Editions</option>
+              <option value="Minecraft Bedrock">Minecraft Bedrock</option>
+              <option value="Minecraft Java">Minecraft Java</option>
+            </select>
+            <select id="browse-sort-select" onchange="renderBrowseGrid()" class="px-3.5 py-2.5 rounded-xl bg-obsidian-800 border border-obsidian-600 text-sm text-white focus:outline-none focus:border-emeraldmc-500">
+              <option value="latest">Newest First</option>
+              <option value="popular">Most Downloaded</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="browse-mods-grid" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- ==================== 3. UPLOAD MOD VIEW ==================== -->
+    <section id="view-upload" class="view-section hidden">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="bg-obsidian-800 border border-obsidian-700 rounded-2xl p-6 sm:p-8 shadow-xl">
+          <div class="flex items-center gap-3 pb-6 border-b border-obsidian-700">
+            <div class="w-11 h-11 rounded-xl bg-emeraldmc-500/15 border border-emeraldmc-500/40 flex items-center justify-center text-emeraldmc-400">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            </div>
+            <div>
+              <h1 class="text-2xl font-extrabold text-white">Upload a Minecraft Mod</h1>
+              <p class="text-sm text-gray-400">Publish your Minecraft Bedrock or Java mod to DOG MODS</p>
+            </div>
+          </div>
+
+          <!-- Admin Code Notice Banner if Locked -->
+          <div id="upload-auth-warning" class="mt-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <p class="text-sm text-amber-200">Uploading a Minecraft mod requires the <strong>Admin Access Code</strong>.</p>
+            <button type="button" onclick="openAuthModal('upload')" class="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-obsidian-950 font-bold text-xs shrink-0">Enter Admin Code</button>
+          </div>
+
+          <form id="upload-mod-form" onsubmit="handleModUpload(event)" class="mt-6 space-y-6">
+            <!-- Thumbnail 400x400 Upload + Live Square Preview -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 items-start">
+              <div class="sm:col-span-1">
+                <label class="block text-xs font-mono uppercase tracking-wider text-gray-300 mb-2">Thumbnails (1+ Images)</label>
+                <div class="aspect-square w-full max-w-[200px] rounded-xl bg-obsidian-900 border-2 border-dashed border-obsidian-600 overflow-hidden flex items-center justify-center relative group">
+                  <img id="upload-thumb-preview" src="" alt="Thumbnail preview" class="hidden w-full h-full object-cover" />
+                  <div id="upload-thumb-placeholder" class="text-center p-4">
+                    <svg class="w-8 h-8 text-gray-500 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span class="text-xs text-gray-400 block">400 &times; 400 px</span>
+                  </div>
+                </div>
+                <div id="upload-thumbs-strip" class="hidden mt-2.5 flex flex-wrap gap-1.5 max-w-[200px]"></div>
+              </div>
+              <div class="sm:col-span-2 space-y-4">
+                <div>
+                  <label for="mod-thumb-input" class="block text-sm font-semibold text-gray-200 mb-1.5">Mod Thumbnails & Screenshots (1 or more) *</label>
+                  <input
+                    id="mod-thumb-input"
+                    type="file"
+                    accept="image/png, image/jpeg, image/webp"
+                    multiple
+                    required
+                    onchange="handleThumbnailSelect(event)"
+                    class="block w-full text-sm text-gray-300 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emeraldmc-600 file:text-white hover:file:bg-emeraldmc-500 bg-obsidian-900 border border-obsidian-600 rounded-xl cursor-pointer"
+                  />
+                  <p class="text-xs text-gray-400 mt-1.5">Select <strong>1 or more images</strong> (up to 6). The first image is the main <strong>400&times;400</strong> cover and extra images appear as screenshots on the mod page.</p>
+                </div>
+
+                <div>
+                  <label for="mod-name-input" class="block text-sm font-semibold text-gray-200 mb-1.5">Mod Name *</label>
+                  <input
+                    id="mod-name-input"
+                    type="text"
+                    required
+                    maxlength="80"
+                    placeholder="e.g., Emerald Wolf Armor & Companions"
+                    class="w-full px-4 py-2.5 rounded-xl bg-obsidian-900 border border-obsidian-600 text-white placeholder-gray-500 focus:outline-none focus:border-emeraldmc-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Edition & Version -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="mod-edition-select" class="block text-sm font-semibold text-gray-200 mb-1.5">Minecraft Edition *</label>
+                <select
+                  id="mod-edition-select"
+                  required
+                  class="w-full px-4 py-2.5 rounded-xl bg-obsidian-900 border border-obsidian-600 text-white focus:outline-none focus:border-emeraldmc-500"
+                >
+                  <option value="Minecraft Bedrock">Minecraft Bedrock</option>
+                  <option value="Minecraft Java">Minecraft Java</option>
+                </select>
+              </div>
+              <div>
+                <label for="mod-version-input" class="block text-sm font-semibold text-gray-200 mb-1.5">Minecraft Version *</label>
+                <input
+                  id="mod-version-input"
+                  type="text"
+                  list="mc-version-options"
+                  required
+                  value="1.26.60"
+                  placeholder="e.g., 1.26+ or 1.26.60"
+                  class="w-full px-4 py-2.5 rounded-xl bg-obsidian-900 border border-obsidian-600 text-white placeholder-gray-500 focus:outline-none focus:border-emeraldmc-500"
+                />
+                <datalist id="mc-version-options">
+                  <option value="1.26+"></option>
+                  <option value="1.26.60"></option>
+                  <option value="1.26.50"></option>
+                  <option value="1.26.40"></option>
+                  <option value="1.26.30"></option>
+                  <option value="1.26.20"></option>
+                  <option value="1.26.10"></option>
+                  <option value="1.26.0"></option>
+                </datalist>
+                <div class="mt-2 flex flex-wrap gap-1.5">
+                  <button type="button" onclick="document.getElementById('mod-version-input').value='1.26+'" class="px-2.5 py-1 rounded-lg bg-obsidian-900 hover:bg-emeraldmc-600/20 text-emeraldmc-400 border border-obsidian-700 hover:border-emeraldmc-500/50 text-xs font-mono transition">1.26+</button>
+                  <button type="button" onclick="document.getElementById('mod-version-input').value='1.26.60'" class="px-2.5 py-1 rounded-lg bg-obsidian-900 hover:bg-emeraldmc-600/20 text-emeraldmc-400 border border-obsidian-700 hover:border-emeraldmc-500/50 text-xs font-mono transition">1.26.60</button>
+                  <button type="button" onclick="document.getElementById('mod-version-input').value='1.26.40'" class="px-2.5 py-1 rounded-lg bg-obsidian-900 hover:bg-emeraldmc-600/20 text-gray-300 border border-obsidian-700 hover:border-emeraldmc-500/50 text-xs font-mono transition">1.26.40</button>
+                  <button type="button" onclick="document.getElementById('mod-version-input').value='1.26.0'" class="px-2.5 py-1 rounded-lg bg-obsidian-900 hover:bg-emeraldmc-600/20 text-gray-300 border border-obsidian-700 hover:border-emeraldmc-500/50 text-xs font-mono transition">1.26.0</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mod Description -->
+            <div>
+              <label for="mod-desc-input" class="block text-sm font-semibold text-gray-200 mb-1.5">Mod Description *</label>
+              <textarea
+                id="mod-desc-input"
+                rows="4"
+                required
+                placeholder="Describe features, crafting recipes, installation steps for Bedrock or Java..."
+                class="w-full px-4 py-3 rounded-xl bg-obsidian-900 border border-obsidian-600 text-white placeholder-gray-500 focus:outline-none focus:border-emeraldmc-500"
+              ></textarea>
+            </div>
+
+            <!-- Mod File Upload -->
+            <div>
+              <label for="mod-file-input" class="block text-sm font-semibold text-gray-200 mb-1.5">
+                Minecraft Mod File * <span class="text-xs font-mono text-emeraldmc-400">(.mcaddon, .mcpack, .mcworld, .jar, .zip)</span>
+              </label>
+              <input
+                id="mod-file-input"
+                type="file"
+                accept=".mcaddon,.mcpack,.mcworld,.jar,.zip"
+                required
+                onchange="handleModFileSelect(event)"
+                class="block w-full text-sm text-gray-300 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-obsidian-700 file:text-emeraldmc-400 hover:file:bg-obsidian-600 bg-obsidian-900 border border-obsidian-600 rounded-xl cursor-pointer"
+              />
+              <div id="mod-file-meta" class="hidden mt-2 px-3.5 py-2 rounded-lg bg-obsidian-900 border border-obsidian-700 flex items-center justify-between text-xs font-mono">
+                <span id="selected-file-name" class="text-emeraldmc-400 truncate">pack.mcaddon</span>
+                <span id="selected-file-size" class="text-gray-400 ml-3 shrink-0">0 KB</span>
+              </div>
+            </div>
+
+            <!-- Upload Progress Bar -->
+            <div id="upload-progress-wrapper" class="hidden space-y-1.5">
+              <div class="flex justify-between text-xs font-mono text-emeraldmc-400">
+                <span id="upload-status-text">Uploading mod package...</span>
+                <span id="upload-percent-text">0%</span>
+              </div>
+              <div class="w-full h-2.5 rounded-full bg-obsidian-900 overflow-hidden border border-obsidian-700">
+                <div id="upload-progress-bar" class="h-full bg-emeraldmc-500 transition-all duration-200" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-2 flex items-center justify-end gap-3">
+              <button type="button" onclick="navigateTo('home')" class="px-5 py-2.5 rounded-xl bg-obsidian-700 hover:bg-obsidian-600 text-gray-200 text-sm font-semibold transition">Cancel</button>
+              <button id="submit-mod-btn" type="submit" class="px-6 py-2.5 rounded-xl bg-emeraldmc-600 hover:bg-emeraldmc-500 text-white text-sm font-bold shadow-lg shadow-emeraldmc-950/60 transition flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                Upload Minecraft Mod
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 4. MOD DETAILS VIEW ==================== -->
+    <section id="view-details" class="view-section hidden">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <button onclick="navigateTo('home')" class="inline-flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-emeraldmc-400 mb-6 transition">
+          <span>&larr;</span> Back to Mods
+        </button>
+
+        <div id="mod-details-container" class="bg-obsidian-800 border border-obsidian-700 rounded-2xl overflow-hidden shadow-2xl">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 5. USER PROFILE VIEW ==================== -->
+    <section id="view-profile" class="view-section hidden">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Profile Header Card -->
+        <div class="bg-obsidian-800 border border-obsidian-700 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div class="flex items-center gap-4">
+            <div id="profile-avatar-lg" class="w-16 h-16 rounded-2xl bg-emeraldmc-600/20 border-2 border-emeraldmc-500 flex items-center justify-center text-2xl font-extrabold text-emeraldmc-400">
+              P
+            </div>
+            <div>
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h1 id="profile-username" class="text-2xl font-extrabold text-white">Player</h1>
+                <span id="profile-role-badge" class="px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-emeraldmc-500/15 text-emeraldmc-400 border border-emeraldmc-500/30">MEMBER</span>
+              </div>
+              <p id="profile-email" class="text-sm text-gray-400 mt-0.5">player@example.com</p>
+              <p id="profile-uid" class="text-[11px] font-mono text-gray-500 mt-1">UID: ...</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="navigateTo('upload')" class="px-4 py-2.5 rounded-xl bg-emeraldmc-600 hover:bg-emeraldmc-500 text-white text-sm font-semibold transition">+ Upload New Mod</button>
+            <button onclick="handleLogout()" class="px-4 py-2.5 rounded-xl bg-obsidian-700 hover:bg-red-600/20 hover:text-red-400 hover:border-red-500/40 border border-obsidian-600 text-gray-200 text-sm font-semibold transition">Logout</button>
+          </div>
+        </div>
+
+        <!-- User's Uploaded Mods -->
+        <div class="mt-8">
+          <h2 class="text-xl font-bold text-white mb-4">My Uploaded Minecraft Mods</h2>
+          <div id="profile-mods-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 6. ADMIN DASHBOARD VIEW ==================== -->
+    <section id="view-admin" class="view-section hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-obsidian-700">
+          <div>
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-mono mb-1.5">
+              ADMIN CONTROL PANEL
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white">DOG MODS Administration</h1>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="switchAdminTab('mods')" id="admin-tab-mods" class="px-4 py-2 rounded-xl text-sm font-semibold bg-emeraldmc-600 text-white">Manage Mods</button>
+          </div>
+        </div>
+
+        <!-- Admin Stats Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+          <div class="bg-obsidian-800 border border-obsidian-700 rounded-xl p-4">
+            <p class="text-xs font-mono text-gray-400">TOTAL MODS</p>
+            <p id="stat-total-mods" class="text-2xl font-extrabold text-white mt-1">0</p>
+          </div>
+          <div class="bg-obsidian-800 border border-amber-500/30 rounded-xl p-4">
+            <p class="text-xs font-mono text-amber-400">PENDING APPROVAL</p>
+            <p id="stat-pending-mods" class="text-2xl font-extrabold text-amber-400 mt-1">0</p>
+          </div>
+          <div class="bg-obsidian-800 border border-obsidian-700 rounded-xl p-4">
+            <p class="text-xs font-mono text-gray-400">TOTAL DOWNLOADS</p>
+            <p id="stat-total-downloads" class="text-2xl font-extrabold text-emeraldmc-400 mt-1">0</p>
+          </div>
+        </div>
+
+        <!-- Admin Mods Management Table -->
+        <div id="admin-panel-mods" class="mt-8 bg-obsidian-800 border border-obsidian-700 rounded-2xl overflow-hidden">
+          <div class="p-4 sm:p-5 border-b border-obsidian-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 class="font-bold text-lg text-white">Mod Moderation & Repository</h2>
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="admin-mod-status-filter" onchange="renderAdminModsTable()" class="px-3 py-1.5 rounded-lg bg-obsidian-900 border border-obsidian-600 text-xs text-white">
+                <option value="ALL">All Statuses</option>
+                <option value="pending">Pending Review</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <button onclick="confirmDeleteAllMods()" class="px-3 py-1.5 rounded-lg bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 text-xs font-bold transition">
+                Delete All Mods
+              </button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-obsidian-900/80 border-b border-obsidian-700 text-xs font-mono text-gray-400 uppercase">
+                  <th class="py-3 px-4">Mod</th>
+                  <th class="py-3 px-4">Edition & Ver</th>
+                  <th class="py-3 px-4">Author</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4">Downloads</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-mods-tbody" class="divide-y divide-obsidian-700/70 text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Admin Users Management Table -->
+        <div id="admin-panel-users" class="hidden mt-8 bg-obsidian-800 border border-obsidian-700 rounded-2xl overflow-hidden">
+          <div class="p-4 sm:p-5 border-b border-obsidian-700">
+            <h2 class="font-bold text-lg text-white">Registered Community Accounts</h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-obsidian-900/80 border-b border-obsidian-700 text-xs font-mono text-gray-400 uppercase">
+                  <th class="py-3 px-4">Username</th>
+                  <th class="py-3 px-4">Email</th>
+                  <th class="py-3 px-4">Role</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-tbody" class="divide-y divide-obsidian-700/70 text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-obsidian-950 border-t border-obsidian-800 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-white">DOG <span class="text-emeraldmc-500">MODS</span></span>
+        <span>&bull; Dedicated exclusively to Minecraft Bedrock & Java Edition Mods.</span>
+      </div>
+      <div class="font-mono text-gray-500">
+        Supported Formats: .mcaddon .mcpack .mcworld .jar .zip
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== ADMIN ACCESS CODE MODAL ==================== -->
+  <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-obsidian-800 border border-obsidian-600 rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-1.5 rounded-lg hover:bg-obsidian-700">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <div class="flex items-center gap-2.5 mb-5">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-extrabold text-white">Admin Access Code</h2>
+          <p class="text-xs text-gray-400">Enter the Admin code to upload or manage mods</p>
+        </div>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1.5">Admin Code</label>
+          <input
+            id="admin-code-input"
+            type="password"
+            required
+            autocomplete="off"
+            placeholder="Enter Admin Access Code..."
+            class="w-full px-4 py-3 rounded-xl bg-obsidian-900 border border-obsidian-600 text-sm font-mono text-white focus:outline-none focus:border-amber-500"
+          />
+        </div>
+        <button id="auth-submit-btn" type="submit" class="w-full py-3 rounded-xl bg-emeraldmc-600 hover:bg-emeraldmc-500 text-white font-bold text-sm shadow-lg transition">
+          Unlock Admin & Upload
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== ADMIN EDIT MOD MODAL ==================== -->
+  <div id="edit-mod-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-obsidian-800 border border-obsidian-600 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+      <button onclick="closeEditModModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-1.5 rounded-lg hover:bg-obsidian-700">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <h2 class="text-xl font-extrabold text-white mb-4">Edit Minecraft Mod Information</h2>
+      <form onsubmit="handleEditModSave(event)" class="space-y-4">
+        <input type="hidden" id="edit-mod-id" />
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Mod Name</label>
+          <input id="edit-mod-name" type="text" required class="w-full px-3.5 py-2 rounded-xl bg-obsidian-900 border border-obsidian-600 text-sm text-white" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Minecraft Edition</label>
+            <select id="edit-mod-edition" class="w-full px-3.5 py-2 rounded-xl bg-obsidian-900 border border-obsidian-600 text-sm text-white">
+              <option value="Minecraft Bedrock">Minecraft Bedrock</option>
+              <option value="Minecraft Java">Minecraft Java</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Minecraft Version</label>
+            <input id="edit-mod-version" type="text" list="mc-version-options" required placeholder="e.g., 1.26+ or 1.26.60" class="w-full px-3.5 py-2 rounded-xl bg-obsidian-900 border border-obsidian-600 text-sm text-white" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Mod Description</label>
+          <textarea id="edit-mod-desc" rows="4" required class="w-full px-3.5 py-2 rounded-xl bg-obsidian-900 border border-obsidian-600 text-sm text-white"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeEditModModal()" class="px-4 py-2 rounded-xl bg-obsidian-700 text-gray-200 text-xs font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-emeraldmc-600 hover:bg-emeraldmc-500 text-white text-xs font-bold">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== CONFIRMATION DIALOG MODAL ==================== -->
+  <div id="confirm-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-obsidian-800 border border-obsidian-600 rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+      <h3 id="confirm-modal-title" class="text-lg font-bold text-white">Confirm Action</h3>
+      <p id="confirm-modal-message" class="text-sm text-gray-300 mt-2">Are you sure?</p>
+      <div class="flex justify-end gap-2.5 mt-6">
+        <button onclick="closeConfirmModal()" class="px-4 py-2 rounded-xl bg-obsidian-700 text-gray-200 text-xs font-semibold">Cancel</button>
+        <button id="confirm-modal-yes" class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FIREBASE & APPLICATION LOGIC ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import {
+      getAuth,
+      signInAnonymously,
+      signInWithCustomToken,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      getDocs,
+      addDoc,
+      updateDoc,
+      deleteDoc,
+      collection,
+      onSnapshot,
+      increment
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import {
+      getStorage,
+      ref as storageRef,
+      uploadBytes,
+      getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
+    // Environment Firebase Configuration
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'dog-mods-mc-app';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    const ADMIN_ACCESS_CODE = 'Lo1454Me';
+
+    let app = null;
+    let auth = null;
+    let db = null;
+    let storage = null;
+    let modsColRef = null;
+    let chunksColRef = null;
+
+    // Local IndexedDB helper for instant large-file caching & fallback
+    function openLocalModDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open('DogModsFileStore', 2);
+        req.onupgradeneeded = () => {
+          const idb = req.result;
+          if (!idb.objectStoreNames.contains('files')) {
+            idb.createObjectStore('files');
+          }
+          if (!idb.objectStoreNames.contains('state')) {
+            idb.createObjectStore('state');
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function savePersistentState(key, value) {
+      try {
+        const idb = await openLocalModDB();
+        return new Promise((resolve) => {
+          const tx = idb.transaction('state', 'readwrite');
+          tx.objectStore('state').put(value, key);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => resolve(false);
+        });
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function loadPersistentState(key, fallback = null) {
+      try {
+        const idb = await openLocalModDB();
+        return new Promise((resolve) => {
+          const tx = idb.transaction('state', 'readonly');
+          const req = tx.objectStore('state').get(key);
+          req.onsuccess = () => resolve(req.result !== undefined ? req.result : fallback);
+          req.onerror = () => resolve(fallback);
+        });
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    async function saveFileToLocalDB(key, blob) {
+      try {
+        const idb = await openLocalModDB();
+        return new Promise((resolve, reject) => {
+          const tx = idb.transaction('files', 'readwrite');
+          tx.objectStore('files').put(blob, key);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => reject(tx.error);
+        });
+      } catch (e) {
+        console.warn('IndexedDB save warning:', e);
+        return false;
+      }
+    }
+
+    async function getFileFromLocalDB(key) {
+      try {
+        const idb = await openLocalModDB();
+        return new Promise((resolve) => {
+          const tx = idb.transaction('files', 'readonly');
+          const req = tx.objectStore('files').get(key);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => resolve(null);
+        });
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // Global State
+    let currentAuthUser = null;
+    let isAdminUnlocked = false;
+    let pendingPostUnlockView = null;
+    let allMods = [];
+    let activeEditionFilter = 'ALL';
+    let homeSearchTerm = '';
+    let processedThumbDataUrl = '';
+    let processedThumbList = [];
+    let selectedModFile = null;
+    let currentDetailModId = null;
+    let currentDetailImageIndex = 0;
+    let unsubMods = null;
+    let unsubUsers = null;
+
+    // Helper: Escape HTML to prevent XSS
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Helper: Format File Size
+    function formatBytes(bytes) {
+      if (!bytes || bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Helper: Format Timestamp
+    function formatDate(ts) {
+      if (!ts) return 'Just now';
+      return new Date(ts).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    // Helper: Toast Notification
+    window.showToast = function(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      const colors = {
+        success: 'bg-obsidian-800 border-emeraldmc-500 text-emeraldmc-300',
+        error: 'bg-obsidian-800 border-red-500 text-red-300',
+        info: 'bg-obsidian-800 border-sky-500 text-sky-300'
+      };
+      toast.className = `pointer-events-auto px-4 py-3 rounded-xl border shadow-xl text-sm font-medium flex items-center justify-between gap-3 transition-all duration-300 ${colors[type] || colors.success}`;
+      toast.innerHTML = `<span>${escapeHtml(message)}</span><button onclick="this.parentElement.remove()" class="text-xs opacity-70 hover:opacity-100">&times;</button>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    };
+
+    // ==================== NAVIGATION ====================
+    window.navigateTo = function(viewName, modId = null) {
+      if ((viewName === 'admin' || viewName === 'upload') && !isAdminUnlocked) {
+        openAuthModal(viewName);
+        return;
+      }
+
+      document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById(`view-${viewName}`);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.dataset.nav === viewName) {
+          btn.classList.add('bg-obsidian-800', 'text-white');
+        } else {
+          btn.classList.remove('bg-obsidian-800', 'text-white');
+        }
+      });
+
+      if (viewName === 'home') renderHomeSections();
+      if (viewName === 'browse') renderBrowseGrid();
+      if (viewName === 'upload') updateUploadAuthBanner();
+      if (viewName === 'admin') renderAdminDashboard();
+      if (viewName === 'details' && modId) {
+        currentDetailModId = modId;
+        currentDetailImageIndex = 0;
+        renderModDetails(modId);
+      }
+
+      savePersistentState('lastView', { viewName, modId });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.toggleMobileMenu = function() {
+      const menu = document.getElementById('mobile-menu');
+      if (menu) menu.classList.toggle('hidden');
+    };
+
+    // ==================== ADMIN CODE GATE ====================
+    window.openAuthModal = function(targetView = null) {
+      pendingPostUnlockView = targetView;
+      const modal = document.getElementById('auth-modal');
+      const input = document.getElementById('admin-code-input');
+      if (input) input.value = '';
+      if (modal) modal.classList.remove('hidden');
+      if (input) setTimeout(() => input.focus(), 50);
+    };
+
+    window.closeAuthModal = function() {
+      const modal = document.getElementById('auth-modal');
+      if (modal) modal.classList.add('hidden');
+    };
+
+    window.handleAuthSubmit = function(e) {
+      e.preventDefault();
+      const codeInput = document.getElementById('admin-code-input');
+      const enteredCode = (codeInput?.value || '').trim();
+
+      if (enteredCode === ADMIN_ACCESS_CODE) {
+        isAdminUnlocked = true;
+        savePersistentState('isAdminUnlocked', true);
+        if (currentAuthUser?.uid) {
+          setDoc(doc(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'session', 'admin'), {
+            unlocked: true,
+            updatedAt: Date.now()
+          }).catch(() => {});
+        }
+        updateAuthUI();
+        closeAuthModal();
+        if (codeInput) codeInput.value = '';
+        showToast('Admin code verified! Upload & Admin unlocked.', 'success');
+        if (pendingPostUnlockView) {
+          const nextView = pendingPostUnlockView;
+          pendingPostUnlockView = null;
+          navigateTo(nextView);
+        }
+      } else {
+        showToast('Incorrect Admin Code.', 'error');
+        if (codeInput) {
+          codeInput.value = '';
+          codeInput.focus();
+        }
+      }
+    };
+
+    window.handleLogout = function() {
+      isAdminUnlocked = false;
+      pendingPostUnlockView = null;
+      savePersistentState('isAdminUnlocked', false);
+      if (currentAuthUser?.uid) {
+        setDoc(doc(db, 'artifacts', appId, 'users', currentAuthUser.uid, 'session', 'admin'), {
+          unlocked: false,
+          updatedAt: Date.now()
+        }).catch(() => {});
+      }
+      updateAuthUI();
+      navigateTo('home');
+      showToast('Admin mode locked.', 'info');
+    };
+
+    function updateAuthUI() {
+      const guestActions = document.getElementById('guest-actions');
+      const userActions = document.getElementById('user-actions');
+
+      if (isAdminUnlocked) {
+        guestActions.classList.add('hidden');
+        userActions.classList.remove('hidden');
+        userActions.classList.add('flex');
+      } else {
+        guestActions.classList.remove('hidden');
+        userActions.classList.add('hidden');
+        userActions.classList.remove('flex');
+      }
+      updateUploadAuthBanner();
+    }
+
+    function updateUploadAuthBanner() {
+      const warning = document.getElementById('upload-auth-warning');
+      if (!warning) return;
+      if (isAdminUnlocked) {
+        warning.classList.add('hidden');
+      } else {
+        warning.classList.remove('hidden');
+      }
+    }
+
+    // ==================== MOD CARD & HOME RENDERING ====================
+    function buildModCardHTML(mod, showStatus = false) {
+      const isBedrock = mod.edition === 'Minecraft Bedrock';
+      const badgeClass = isBedrock
+        ? 'bg-sky-500/15 text-sky-300 border-sky-500/30'
+        : 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+      const statusColors = {
+        approved: 'bg-emeraldmc-500/20 text-emeraldmc-300 border-emeraldmc-500/40',
+        pending: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+        rejected: 'bg-red-500/20 text-red-300 border-red-500/40'
+      };
+
+      return `
+        <article class="mod-card bg-obsidian-800 border border-obsidian-700 rounded-2xl overflow-hidden flex flex-col">
+          <div onclick="navigateTo('details', '${escapeHtml(mod.id)}')" class="aspect-square w-full bg-obsidian-900 relative overflow-hidden cursor-pointer group">
+            <img
+              src="${escapeHtml(mod.thumbnailUrl || 'https://placehold.co/400x400/161d26/4ade80?text=DOG+MODS')}"
+              alt="${escapeHtml(mod.name)}"
+              onerror="this.src='https://placehold.co/400x400/161d26/4ade80?text=DOG+MODS'"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            />
+            <div class="absolute top-3 left-3 flex flex-wrap gap-1.5">
+              <span class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold border backdrop-blur-md ${badgeClass}">
+                ${isBedrock ? 'BEDROCK' : 'JAVA'}
+              </span>
+              <span class="px-2 py-1 rounded-lg text-[11px] font-mono bg-obsidian-950/80 text-gray-200 border border-obsidian-700 backdrop-blur-md">
+                v${escapeHtml(mod.mcVersion)}
+              </span>
+            </div>
+            ${Array.isArray(mod.thumbnails) && mod.thumbnails.length > 1 ? `
+              <div class="absolute bottom-3 right-3">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-obsidian-950/85 text-emeraldmc-400 border border-emeraldmc-500/40 backdrop-blur-md">
+                  +${mod.thumbnails.length - 1} photos
+                </span>
+              </div>
+            ` : ''}
+            ${showStatus ? `
+              <div class="absolute top-3 right-3">
+                <span class="px-2 py-1 rounded-lg text-[10px] font-mono uppercase font-bold border backdrop-blur-md ${statusColors[mod.status] || statusColors.pending}">
+                  ${escapeHtml(mod.status || 'pending')}
+                </span>
+              </div>
+            ` : ''}
+          </div>
+          <div class="p-4 flex-grow flex flex-col justify-between">
+            <div>
+              <h3 onclick="navigateTo('details', '${escapeHtml(mod.id)}')" class="font-bold text-base text-white hover:text-emeraldmc-400 cursor-pointer line-clamp-1 transition">
+                ${escapeHtml(mod.name)}
+              </h3>
+              <p class="text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
+                ${escapeHtml(mod.description)}
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-obsidian-700/70 flex items-center justify-between gap-2">
+              <div class="text-[11px] font-mono text-gray-400">
+                <span class="text-emeraldmc-400 font-bold">${Number(mod.downloads || 0).toLocaleString()}</span> DLs &bull; ${escapeHtml(mod.fileSize || '0 KB')}
+              </div>
+              <button
+                onclick="downloadModFile('${escapeHtml(mod.id)}')"
+                class="px-3 py-1.5 rounded-lg bg-emeraldmc-600 hover:bg-emeraldmc-500 text-white text-xs font-bold transition flex items-center gap-1 shrink-0"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download
+              </button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    window.handleHomeSearch = function(val) {
+      homeSearchTerm = val.trim().toLowerCase();
+      renderHomeSections();
+    };
+
+    window.setEditionFilter = function(edition) {
+      activeEditionFilter = edition;
+      document.querySelectorAll('.edition-pill').forEach(pill => {
+        if (pill.dataset.editionPill === edition) {
+          pill.className = 'edition-pill px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emeraldmc-600 text-white border border-emeraldmc-500 transition';
+        } else {
+          pill.className = 'edition-pill px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-800 text-gray-300 hover:text-white border border-obsidian-700 transition';
+        }
+      });
+      renderHomeSections();
+    };
+
+    window.resetHomeFilters = function() {
+      homeSearchTerm = '';
+      const input = document.getElementById('home-search-input');
+      if (input) input.value = '';
+      setEditionFilter('ALL');
+    };
+
+    function renderHomeSections() {
+      const approved = allMods.filter(m => m.status === 'approved');
+      const filteredSection = document.getElementById('home-filtered-section');
+      const filteredGrid = document.getElementById('home-filtered-grid');
+      const isFiltering = homeSearchTerm.length > 0 || activeEditionFilter !== 'ALL';
+
+      if (isFiltering) {
+        filteredSection.classList.remove('hidden');
+        const matches = approved.filter(m => {
+          const matchName = m.name.toLowerCase().includes(homeSearchTerm);
+          const matchEd = activeEditionFilter === 'ALL' || m.edition === activeEditionFilter;
+          return matchName && matchEd;
+        });
+        document.getElementById('home-filter-subtitle').textContent = `${matches.length} mod(s) found`;
+        filteredGrid.innerHTML = matches.length
+          ? matches.map(m => buildModCardHTML(m)).join('')
+          : `<div class="col-span-full py-8 text-center bg-obsidian-800/60 border border-obsidian-700 rounded-2xl text-sm text-gray-400">No matching Minecraft mods found.</div>`;
+      } else {
+        filteredSection.classList.add('hidden');
+      }
+
+      // Popular Mods (sorted by downloads desc)
+      const popular = [...approved].sort((a, b) => (b.downloads || 0) - (a.downloads || 0)).slice(0, 4);
+      document.getElementById('popular-mods-grid').innerHTML = popular.length
+        ? popular.map(m => buildModCardHTML(m)).join('')
+        : `
+          <div class="col-span-full py-10 px-4 text-center bg-obsidian-800/60 border border-obsidian-700 rounded-2xl">
+            <p class="text-gray-300 font-semibold text-sm">No Minecraft mods have been uploaded yet.</p>
+            <p class="text-gray-400 text-xs mt-1">Be the first to share a Minecraft Bedrock or Java mod with the community!</p>
+            <button onclick="navigateTo('upload')" class="mt-4 px-5 py-2 rounded-xl bg-emeraldmc-600 hover:bg-emeraldmc-500 text-white text-xs font-bold transition">
+              + Upload First Mod
+            </button>
+          </div>
+        `;
+
+      // Latest Mods (sorted by createdAt desc)
+      const latest = [...approved].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 8);
+      document.getElementById('latest-mods-grid').innerHTML = latest.length
+        ? latest.map(m => buildModCardHTML(m)).join('')
+        : `
+          <div class="col-span-full py-10 px-4 text-center bg-obsidian-800/60 border border-obsidian-700 rounded-2xl">
+            <p class="text-gray-400 text-sm">No latest uploads yet. Uploaded mods will appear here once approved.</p>
+          </div>
+        `;
+    }
+
+    window.renderBrowseGrid = function() {
+      const search = (document.getElementById('browse-search-input')?.value || '').trim().toLowerCase();
+      const edition = document.getElementById('browse-edition-select')?.value || 'ALL';
+      const sort = document.getElementById('browse-sort-select')?.value || 'latest';
+
+      let list = allMods.filter(m => m.status === 'approved');
+      if (search) list = list.filter(m => m.name.toLowerCase().includes(search));
+      if (edition !== 'ALL') list = list.filter(m => m.edition === edition);
+
+      if (sort === 'popular') {
+        list.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
+      } else {
+        list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      }
+
+      const grid = document.getElementById('browse-mods-grid');
+      if (!grid) return;
+      grid.innerHTML = list.length
+        ? list.map(m => buildModCardHTML(m)).join('')
+        : `<div class="col-span-full py-12 text-center bg-obsidian-800/60 border border-obsidian-700 rounded-2xl text-gray-400 text-sm">No Minecraft mods available matching your criteria.</div>`;
+    };
+
+    // ==================== UPLOAD MOD SYSTEM ====================
+    function processImageFileToDataUrl(file, maxDim = 400, cropSquare = true) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            if (cropSquare) {
+              canvas.width = maxDim;
+              canvas.height = maxDim;
+              const ctx = canvas.getContext('2d');
+              const size = Math.min(img.width, img.height);
+              const sx = (img.width - size) / 2;
+              const sy = (img.height - size) / 2;
+              ctx.drawImage(img, sx, sy, size, size, 0, 0, maxDim, maxDim);
+            } else {
+              const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+              canvas.width = Math.round(img.width * scale);
+              canvas.height = Math.round(img.height * scale);
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            }
+            resolve(canvas.toDataURL('image/jpeg', 0.84));
+          };
+          img.onerror = reject;
+          img.src = evt.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    window.renderUploadThumbsStrip = function() {
+      const preview = document.getElementById('upload-thumb-preview');
+      const placeholder = document.getElementById('upload-thumb-placeholder');
+      const strip = document.getElementById('upload-thumbs-strip');
+
+      if (!processedThumbList.length) {
+        processedThumbDataUrl = '';
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        strip.classList.add('hidden');
+        strip.innerHTML = '';
+        return;
+      }
+
+      processedThumbDataUrl = processedThumbList[0];
+      preview.src = processedThumbDataUrl;
+      preview.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+
+      if (processedThumbList.length > 1) {
+        strip.classList.remove('hidden');
+        strip.innerHTML = processedThumbList.map((src, idx) => `
+          <div class="relative w-11 h-11 rounded-lg overflow-hidden border ${idx === 0 ? 'border-emeraldmc-500' : 'border-obsidian-600'} group">
+            <img src="${src}" onclick="setPrimaryUploadThumb(${idx})" class="w-full h-full object-cover cursor-pointer" title="Click to set as main cover" />
+            <button type="button" onclick="removeUploadThumb(${idx})" class="absolute top-0 right-0 bg-black/75 text-red-400 text-[10px] leading-none px-1 py-0.5 hover:bg-red-600 hover:text-white">&times;</button>
+          </div>
+        `).join('');
+      } else {
+        strip.classList.add('hidden');
+        strip.innerHTML = '';
+      }
+    };
+
+    window.setPrimaryUploadThumb = function(idx) {
+      if (idx <= 0 || idx >= processedThumbList.length) return;
+      const [picked] = processedThumbList.splice(idx, 1);
+      processedThumbList.unshift(picked);
+      renderUploadThumbsStrip();
+    };
+
+    window.removeUploadThumb = function(idx) {
+      processedThumbList.splice(idx, 1);
+      renderUploadThumbsStrip();
+    };
+
+    window.handleThumbnailSelect = async function(e) {
+      const files = Array.from(e.target.files || []).slice(0, 6);
+      if (!files.length) return;
+      try {
+        const results = [];
+        for (let i = 0; i < files.length; i++) {
+          // First image cropped to crisp 400x400 cover; extra images preserved up to 720px for clear previewing
+          const dataUrl = await processImageFileToDataUrl(files[i], i === 0 ? 400 : 720, i === 0);
+          results.push(dataUrl);
+        }
+        processedThumbList = results;
+        renderUploadThumbsStrip();
+      } catch (err) {
+        console.error('Thumbnail processing error:', err);
+        showToast('Failed to process selected images.', 'error');
+      }
+    };
+
+    window.handleModFileSelect = function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const allowedExts = ['.mcaddon', '.mcpack', '.mcworld', '.jar', '.zip'];
+      const lowerName = file.name.toLowerCase();
+      const isValid = allowedExts.some(ext => lowerName.endsWith(ext));
+
+      if (!isValid) {
+        showToast('Invalid file format. Only .mcaddon, .mcpack, .mcworld, .jar, and .zip are supported.', 'error');
+        e.target.value = '';
+        selectedModFile = null;
+        document.getElementById('mod-file-meta').classList.add('hidden');
+        return;
+      }
+
+      selectedModFile = file;
+      document.getElementById('selected-file-name').textContent = file.name;
+      document.getElementById('selected-file-size').textContent = formatBytes(file.size);
+      document.getElementById('mod-file-meta').classList.remove('hidden');
+    };
+
+    window.handleModUpload = async function(e) {
+      e.preventDefault();
+      if (!isAdminUnlocked) {
+        openAuthModal('upload');
+        showToast('Please enter the Admin Code before uploading a mod.', 'error');
+        return;
+      }
+      if (!selectedModFile || !processedThumbList.length) {
+        showToast('Please select at least 1 thumbnail image and a valid Minecraft mod file.', 'error');
+        return;
+      }
+
+      const name = document.getElementById('mod-name-input').value.trim();
+      const edition = document.getElementById('mod-edition-select').value;
+      const mcVersion = document.getElementById('mod-version-input').value.trim();
+      const description = document.getElementById('mod-desc-input').value.trim();
+
+      const submitBtn = document.getElementById('submit-mod-btn');
+      const progressWrapper = document.getElementById('upload-progress-wrapper');
+      const progressBar = document.getElementById('upload-progress-bar');
+      const percentText = document.getElementById('upload-percent-text');
+      const statusText = document.getElementById('upload-status-text');
+
+      submitBtn.disabled = true;
+      progressWrapper.classList.remove('hidden');
+      progressBar.style.width = '25%';
+      percentText.textContent = '25%';
+      statusText.textContent = 'Preparing Minecraft mod package...';
+
+      try {
+        let fileDownloadUrl = '';
+        let inlineFileBase64 = '';
+        let chunkGroupId = '';
+        let totalChunks = 0;
+        const localFileKey = `mod_${Date.now()}_${selectedModFile.name}`;
+
+        // Save binary file in browser IndexedDB for instant local retrieval
+        await saveFileToLocalDB(localFileKey, selectedModFile);
+
+        // Attempt Firebase Storage upload first
+        if (storage) {
+          try {
+            statusText.textContent = 'Uploading file to cloud storage...';
+            progressBar.style.width = '55%';
+            percentText.textContent = '55%';
+            const path = `artifacts/${appId}/mods/${Date.now()}_${selectedModFile.name}`;
+            const fileRef = storageRef(storage, path);
+            await uploadBytes(fileRef, selectedModFile);
+            fileDownloadUrl = await getDownloadURL(fileRef);
+          } catch (storageErr) {
+            console.warn('Storage bucket unavailable, using chunked Firestore storage:', storageErr);
+          }
+        }
+
+        // Chunked Firestore fallback so large .jar/.mcaddon/.zip files work without a 750 KB cap
+        if (!fileDownloadUrl) {
+          const fullDataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(selectedModFile);
+          });
+
+          const CHUNK_SIZE = 450 * 1024; // 450 KB per Firestore chunk document (well under 1 MB limit)
+          if (fullDataUrl.length <= CHUNK_SIZE) {
+            inlineFileBase64 = fullDataUrl;
+          } else {
+            chunkGroupId = `grp_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+            totalChunks = Math.ceil(fullDataUrl.length / CHUNK_SIZE);
+
+            for (let i = 0; i < totalChunks; i++) {
+              const slice = fullDataUrl.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+              const pct = Math.min(88, Math.round(35 + ((i + 1) / totalChunks) * 53));
+              progressBar.style.width = `${pct}%`;
+              percentText.textContent = `${pct}%`;
+              statusText.textContent = `Uploading package part ${i + 1} of ${totalChunks}...`;
+
+              await setDoc(
+                doc(db, 'artifacts', appId, 'public', 'data', 'mc_mod_chunks', `${chunkGroupId}_${i}`),
+                {
+                  groupId: chunkGroupId,
+                  index: i,
+                  data: slice
+                }
+              );
+            }
+          }
+        }
+
+        progressBar.style.width = '92%';
+        percentText.textContent = '92%';
+        statusText.textContent = 'Saving mod metadata...';
+
+        const newModPayload = {
+          name,
+          edition,
+          mcVersion,
+          description,
+          thumbnailUrl: processedThumbList[0],
+          thumbnails: processedThumbList,
+          fileName: selectedModFile.name,
+          fileSize: formatBytes(selectedModFile.size),
+          fileDownloadUrl,
+          inlineFileBase64,
+          chunkGroupId,
+          totalChunks,
+          localFileKey,
+          authorId: currentAuthUser?.uid || 'admin',
+          authorName: 'DOG MODS Admin',
+          status: 'approved',
+          downloads: 0,
+          createdAt: Date.now()
+        };
+
+        const docRef = await addDoc(modsColRef, newModPayload);
+        const createdMod = { id: docRef.id, ...newModPayload };
+        if (!allMods.some(m => m.id === docRef.id)) {
+          allMods.unshift(createdMod);
+        }
+        await savePersistentState('cachedMods', allMods);
+
+        progressBar.style.width = '100%';
+        percentText.textContent = '100%';
+
+        // Reset form
+        document.getElementById('upload-mod-form').reset();
+        processedThumbDataUrl = '';
+        processedThumbList = [];
+        selectedModFile = null;
+        renderUploadThumbsStrip();
+        document.getElementById('mod-file-meta').classList.add('hidden');
+
+        showToast('Minecraft mod uploaded and published live!', 'success');
+        navigateTo('home');
+      } catch (err) {
+        console.error('Upload error:', err);
+        showToast(err.message || 'Failed to upload mod.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        setTimeout(() => {
+          progressWrapper.classList.add('hidden');
+          progressBar.style.width = '0%';
+        }, 600);
+      }
+    };
+
+    // ==================== MOD DETAILS & REAL DOWNLOAD ====================
+    window.selectDetailGalleryImage = function(idx) {
+      currentDetailImageIndex = idx;
+      if (currentDetailModId) renderModDetails(currentDetailModId);
+    };
+
+    function renderModDetails(modId) {
+      const mod = allMods.find(m => m.id === modId);
+      const container = document.getElementById('mod-details-container');
+      if (!container) return;
+
+      if (!mod) {
+        container.innerHTML = `<div class="p-10 text-center text-gray-400">Mod not found or has been removed.</div>`;
+        return;
+      }
+
+      const gallery = (Array.isArray(mod.thumbnails) && mod.thumbnails.length > 0)
+        ? mod.thumbnails
+        : [mod.thumbnailUrl || 'https://placehold.co/400x400/161d26/4ade80?text=DOG+MODS'];
+      const safeIndex = Math.min(currentDetailImageIndex, gallery.length - 1);
+      const activeImage = gallery[safeIndex];
+
+      const isBedrock = mod.edition === 'Minecraft Bedrock';
+      container.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-3">
+          <div class="md:col-span-1 bg-obsidian-900 p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-obsidian-700">
+            <img
+              src="${escapeHtml(activeImage)}"
+              alt="${escapeHtml(mod.name)}"
+              onerror="this.src='https://placehold.co/400x400/161d26/4ade80?text=DOG+MODS'"
+              class="w-full max-w-[320px] aspect-square object-cover rounded-2xl border border-obsidian-700 shadow-lg"
+            />
+            ${gallery.length > 1 ? `
+              <div class="mt-3.5 flex flex-wrap justify-center gap-2 max-w-[320px]">
+                ${gallery.map((imgSrc, idx) => `
+                  <button
+                    type="button"
+                    onclick="selectDetailGalleryImage(${idx})"
+                    class="w-12 h-12 rounded-lg overflow-hidden border-2 transition ${idx === safeIndex ? 'border-emeraldmc-500 scale-105' : 'border-obsidian-700 opacity-70 hover:opacity-100'}"
+                  >
+                    <img src="${escapeHtml(imgSrc)}" alt="Preview ${idx + 1}" class="w-full h-full object-cover" />
+                  </button>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+          <div class="md:col-span-2 p-6 sm:p-8 flex flex-col justify-between">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-3">
+                <span class="px-3 py-1 rounded-lg text-xs font-mono font-bold ${isBedrock ? 'bg-sky-500/15 text-sky-300 border border-sky-500/30' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'}">
+                  ${escapeHtml(mod.edition)}
+                </span>
+                <span class="px-3 py-1 rounded-lg text-xs font-mono bg-obsidian-900 text-gray-300 border border-obsidian-700">
+                  MC ${escapeHtml(mod.mcVersion)}
+                </span>
+                <span class="px-3 py-1 rounded-lg text-xs font-mono bg-obsidian-900 text-emeraldmc-400 border border-obsidian-700">
+                  ${Number(mod.downloads || 0).toLocaleString()} Downloads
+                </span>
+              </div>
+
+              <h1 class="text-2xl sm:text-3xl font-extrabold text-white">${escapeHtml(mod.name)}</h1>
+              <p class="text-xs text-gray-400 mt-1">
+                Uploaded by <strong class="text-gray-200">${escapeHtml(mod.authorName || 'Creator')}</strong> on ${formatDate(mod.createdAt)}
+              </p>
+
+              <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-obsidian-900 border border-obsidian-700 text-xs">
+                <div>
+                  <span class="text-gray-500 block font-mono">PACKAGE FILE</span>
+                  <span class="text-gray-200 font-semibold truncate block mt-0.5">${escapeHtml(mod.fileName || 'mod_package.zip')}</span>
+                </div>
+                <div>
+                  <span class="text-gray-500 block font-mono">FILE SIZE</span>
+                  <span class="text-gray-200 font-semibold block mt-0.5">${escapeHtml(mod.fileSize || '0 KB')}</span>
+                </div>
+                <div>
+                  <span class="text-gray-500 block font-mono">UPLOAD DATE</span>
+                  <span class="text-gray-200 font-semibold block mt-0.5">${formatDate(mod.createdAt)}</span>
+                </div>
+              </div>
+
+              <div class="mt-6">
+                <h2 class="text-sm font-mono uppercase tracking-wider text-gray-400 mb-2">Mod Description</h2>
+                <p class="text-sm text-gray-300 whitespace-pre-line leading-relaxed">${escapeHtml(mod.description)}</p>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-obsidian-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="text-xs text-gray-400">
+                Verified format for <strong class="text-gray-200">${escapeHtml(mod.edition)}</strong>
+              </div>
+              <button
+                onclick="downloadModFile('${escapeHtml(mod.id)}')"
+                class="px-7 py-3.5 rounded-xl bg-emeraldmc-600 hover:bg-emeraldmc-500 text-white font-bold text-sm shadow-lg shadow-emeraldmc-950/60 transition flex items-center justify-center gap-2"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download Mod (${escapeHtml(mod.fileSize || 'File')})
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.downloadModFile = async function(modId) {
+      const mod = allMods.find(m => m.id === modId);
+      if (!mod) {
+        showToast('Mod package not found.', 'error');
+        return;
+      }
+
+      try {
+        let triggered = false;
+
+        if (mod.fileDownloadUrl) {
+          const a = document.createElement('a');
+          a.href = mod.fileDownloadUrl;
+          a.download = mod.fileName || 'minecraft-mod';
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          triggered = true;
+        } else if (mod.inlineFileBase64) {
+          const a = document.createElement('a');
+          a.href = mod.inlineFileBase64;
+          a.download = mod.fileName || 'minecraft-mod';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          triggered = true;
+        } else if (mod.chunkGroupId && mod.totalChunks > 0) {
+          showToast(`Reassembling ${mod.fileName} (${mod.totalChunks} parts)...`, 'info');
+          const parts = [];
+          for (let i = 0; i < mod.totalChunks; i++) {
+            const chunkSnap = await getDoc(
+              doc(db, 'artifacts', appId, 'public', 'data', 'mc_mod_chunks', `${mod.chunkGroupId}_${i}`)
+            );
+            if (!chunkSnap.exists()) {
+              throw new Error(`Missing package part ${i + 1} of ${mod.totalChunks}.`);
+            }
+            parts.push(chunkSnap.data().data);
+          }
+          const fullDataUrl = parts.join('');
+          const a = document.createElement('a');
+          a.href = fullDataUrl;
+          a.download = mod.fileName || 'minecraft-mod';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          triggered = true;
+        } else if (mod.localFileKey) {
+          const localBlob = await getFileFromLocalDB(mod.localFileKey);
+          if (localBlob) {
+            const blobUrl = URL.createObjectURL(localBlob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = mod.fileName || 'minecraft-mod';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+            triggered = true;
+          }
+        }
+
+        if (!triggered) {
+          showToast('Download file data not found for this mod.', 'error');
+          return;
+        }
+
+        // Increment download counter in Firestore
+        await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'mc_mods', modId), {
+          downloads: increment(1)
+        });
+        showToast(`Downloading ${mod.fileName}...`, 'success');
+      } catch (err) {
+        console.error('Download error:', err);
+        showToast(err.message || 'Failed to trigger download.', 'error');
+      }
+    };
+
+    // ==================== USER PROFILE VIEW ====================
+    function renderProfileView() {
+      if (!currentUserProfile) return;
+      document.getElementById('profile-avatar-lg').textContent = currentUserProfile.username.charAt(0).toUpperCase();
+      document.getElementById('profile-username').textContent = currentUserProfile.username;
+      document.getElementById('profile-email').textContent = currentUserProfile.email;
+      document.getElementById('profile-uid').textContent = `UID: ${currentUserProfile.uid}`;
+
+      const badge = document.getElementById('profile-role-badge');
+      if (currentUserProfile.role === 'admin') {
+        badge.textContent = 'ADMINISTRATOR';
+        badge.className = 'px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30';
+      } else {
+        badge.textContent = 'MOD CREATOR';
+        badge.className = 'px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-emeraldmc-500/15 text-emeraldmc-400 border border-emeraldmc-500/30';
+      }
+
+      const myMods = allMods
+        .filter(m => m.authorId === currentUserProfile.uid)
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+      const grid = document.getElementById('profile-mods-grid');
+      grid.innerHTML = myMods.length
+        ? myMods.map(m => buildModCardHTML(m, true)).join('')
+        : `<div class="col-span-full py-10 text-center bg-obsidian-800/60 border border-obsidian-700 rounded-2xl text-sm text-gray-400">You haven't uploaded any Minecraft mods yet.</div>`;
+    }
+
+    // ==================== ADMIN DASHBOARD ====================
+    window.switchAdminTab = function(tab) {
+      renderAdminModsTable();
+    };
+
+    function renderAdminDashboard() {
+      if (!isAdminUnlocked) return;
+      const pendingCount = allMods.filter(m => m.status === 'pending').length;
+      const totalDownloads = allMods.reduce((sum, m) => sum + Number(m.downloads || 0), 0);
+
+      document.getElementById('stat-total-mods').textContent = allMods.length;
+      document.getElementById('stat-pending-mods').textContent = pendingCount;
+      document.getElementById('stat-total-downloads').textContent = totalDownloads.toLocaleString();
+
+      renderAdminModsTable();
+    }
+
+    window.renderAdminModsTable = function() {
+      const filter = document.getElementById('admin-mod-status-filter')?.value || 'ALL';
+      const tbody = document.getElementById('admin-mods-tbody');
+      if (!tbody) return;
+
+      let list = [...allMods].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      if (filter !== 'ALL') list = list.filter(m => m.status === filter);
+
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-gray-400 text-sm">No mods found in this view.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(m => `
+        <tr class="hover:bg-obsidian-900/50 transition">
+          <td class="py-3.5 px-4">
+            <div class="flex items-center gap-3">
+              <img src="${escapeHtml(m.thumbnailUrl)}" class="w-10 h-10 rounded-lg object-cover bg-obsidian-900 border border-obsidian-700" />
+              <div>
+                <p class="font-bold text-white text-sm">${escapeHtml(m.name)}</p>
+                <p class="text-xs font-mono text-gray-400">${escapeHtml(m.fileName || '')}</p>
+              </div>
+            </div>
+          </td>
+          <td class="py-3.5 px-4 text-xs font-mono text-gray-300">
+            ${escapeHtml(m.edition)}<br/><span class="text-gray-500">v${escapeHtml(m.mcVersion)}</span>
+          </td>
+          <td class="py-3.5 px-4 text-xs text-gray-300">${escapeHtml(m.authorName || 'Unknown')}</td>
+          <td class="py-3.5 px-4">
+            <span class="px-2 py-0.5 rounded text-[11px] font-mono uppercase font-bold ${
+              m.status === 'approved' ? 'bg-emeraldmc-500/15 text-emeraldmc-400' :
+              m.status === 'rejected' ? 'bg-red-500/15 text-red-400' :
+              'bg-amber-500/15 text-amber-400'
+            }">${escapeHtml(m.status)}</span>
+          </td>
+          <td class="py-3.5 px-4 font-mono text-xs text-gray-300">${Number(m.downloads || 0).toLocaleString()}</td>
+          <td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+            ${m.status !== 'approved' ? `<button onclick="setModStatus('${escapeHtml(m.id)}', 'approved')" class="px-2.5 py-1 rounded bg-emeraldmc-600 hover:bg-emeraldmc-500 text-white text-xs font-bold">Approve</button>` : ''}
+            ${m.status !== 'rejected' ? `<button onclick="setModStatus('${escapeHtml(m.id)}', 'rejected')" class="px-2.5 py-1 rounded bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white text-xs font-bold">Reject</button>` : ''}
+            <button onclick="openEditModModal('${escapeHtml(m.id)}')" class="px-2.5 py-1 rounded bg-obsidian-700 hover:bg-obsidian-600 text-gray-200 text-xs font-semibold">Edit</button>
+            <button onclick="confirmDeleteMod('${escapeHtml(m.id)}', '${escapeHtml(m.name)}')" class="px-2.5 py-1 rounded bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white text-xs font-bold">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    };
+
+    window.setModStatus = async function(modId, status) {
+      try {
+        await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'mc_mods', modId), { status });
+        showToast(`Mod marked as ${status}.`, 'success');
+      } catch (err) {
+        console.error('Status update error:', err);
+        showToast('Failed to update mod status.', 'error');
+      }
+    };
+
+    window.openEditModModal = function(modId) {
+      const mod = allMods.find(m => m.id === modId);
+      if (!mod) return;
+      document.getElementById('edit-mod-id').value = mod.id;
+      document.getElementById('edit-mod-name').value = mod.name;
+      document.getElementById('edit-mod-edition').value = mod.edition;
+      document.getElementById('edit-mod-version').value = mod.mcVersion;
+      document.getElementById('edit-mod-desc').value = mod.description;
+      document.getElementById('edit-mod-modal').classList.remove('hidden');
+    };
+
+    window.closeEditModModal = function() {
+      document.getElementById('edit-mod-modal').classList.add('hidden');
+    };
+
+    window.handleEditModSave = async function(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-mod-id').value;
+      const name = document.getElementById('edit-mod-name').value.trim();
+      const edition = document.getElementById('edit-mod-edition').value;
+      const mcVersion = document.getElementById('edit-mod-version').value.trim();
+      const description = document.getElementById('edit-mod-desc').value.trim();
+
+      try {
+        await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'mc_mods', id), {
+          name,
+          edition,
+          mcVersion,
+          description
+        });
+        closeEditModModal();
+        showToast('Mod information updated.', 'success');
+      } catch (err) {
+        console.error('Edit mod error:', err);
+        showToast('Failed to save changes.', 'error');
+      }
+    };
+
+    // Confirmation Dialog Helpers
+    let pendingConfirmCallback = null;
+    function openConfirmModal(title, message, onConfirm) {
+      document.getElementById('confirm-modal-title').textContent = title;
+      document.getElementById('confirm-modal-message').textContent = message;
+      pendingConfirmCallback = onConfirm;
+      document.getElementById('confirm-modal').classList.remove('hidden');
+    }
+
+    window.closeConfirmModal = function() {
+      document.getElementById('confirm-modal').classList.add('hidden');
+      pendingConfirmCallback = null;
+    };
+
+    document.getElementById('confirm-modal-yes').addEventListener('click', async () => {
+      if (pendingConfirmCallback) {
+        const cb = pendingConfirmCallback;
+        closeConfirmModal();
+        await cb();
+      }
+    });
+
+    window.confirmDeleteMod = function(modId, modName) {
+      openConfirmModal(
+        'Delete Minecraft Mod',
+        `Are you sure you want to permanently delete "${modName}"? This action cannot be undone.`,
+        async () => {
+          try {
+            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'mc_mods', modId));
+            allMods = allMods.filter(m => m.id !== modId);
+            await savePersistentState('cachedMods', allMods);
+            showToast('Mod deleted permanently.', 'info');
+          } catch (err) {
+            console.error('Delete mod error:', err);
+            showToast('Failed to delete mod.', 'error');
+          }
+        }
+      );
+    };
+
+    window.confirmDeleteAllMods = function() {
+      if (!isAdminUnlocked) return;
+      if (!allMods.length) {
+        showToast('There are no mods to delete.', 'info');
+        return;
+      }
+      openConfirmModal(
+        'Delete All Minecraft Mods',
+        `Are you sure you want to permanently delete all ${allMods.length} mod(s) from DOG MODS? This cannot be undone.`,
+        async () => {
+          try {
+            const snap = await getDocs(modsColRef);
+            const deletions = snap.docs.map(d =>
+              deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'mc_mods', d.id))
+            );
+            await Promise.all(deletions);
+            allMods = [];
+            await savePersistentState('cachedMods', []);
+            showToast('All mods have been deleted.', 'info');
+          } catch (err) {
+            console.error('Delete all mods error:', err);
+            showToast('Failed to delete all mods.', 'error');
+          }
+        }
+      );
+    };
+
+    // ==================== REALTIME DATABASE LISTENERS ====================
+    function startRealtimeListeners() {
+      if (!db || unsubMods) return;
+
+      unsubMods = onSnapshot(modsColRef, (snapshot) => {
+        const remoteMods = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (remoteMods.length > 0 || !snapshot.metadata.fromCache) {
+          allMods = remoteMods;
+          savePersistentState('cachedMods', allMods);
+        }
+        const pendingCount = allMods.filter(m => m.status === 'pending').length;
+        const badge = document.getElementById('admin-pending-badge');
+        if (badge) {
+          if (pendingCount > 0) {
+            badge.textContent = pendingCount;
+            badge.classList.remove('hidden');
+          } else {
+            badge.classList.add('hidden');
+          }
+        }
+        renderHomeSections();
+        renderBrowseGrid();
+        if (isAdminUnlocked) renderAdminDashboard();
+        if (currentDetailModId) renderModDetails(currentDetailModId);
+      }, (err) => {
+        console.error('Mods listener error:', err);
+      });
+    }
+
+    // ==================== INITIALIZE APP ====================
+    async function initApp() {
+      try {
+        // Restore persisted Admin unlock state & cached mods immediately before network loads
+        const savedAdmin = await loadPersistentState('isAdminUnlocked', false);
+        if (savedAdmin === true) {
+          isAdminUnlocked = true;
+        }
+        const cachedMods = await loadPersistentState('cachedMods', []);
+        if (Array.isArray(cachedMods) && cachedMods.length > 0) {
+          allMods = cachedMods;
+        }
+        updateAuthUI();
+        renderHomeSections();
+
+        const savedView = await loadPersistentState('lastView', null);
+        if (savedView && savedView.viewName && savedView.viewName !== 'home') {
+          navigateTo(savedView.viewName, savedView.modId || null);
+        }
+
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+        try {
+          storage = getStorage(app);
+        } catch (e) {
+          console.warn('Storage init fallback:', e);
+        }
+
+        modsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'mc_mods');
+        chunksColRef = collection(db, 'artifacts', appId, 'public', 'data', 'mc_mod_chunks');
+
+        onAuthStateChanged(auth, async (user) => {
+          currentAuthUser = user;
+          if (!user) {
+            try {
+              if (initialAuthToken) {
+                await signInWithCustomToken(auth, initialAuthToken);
+              } else {
+                await signInAnonymously(auth);
+              }
+            } catch (e) {
+              console.error('Guest auth error:', e);
+            }
+            return;
+          }
+
+          // Also verify persisted admin session from Firestore user profile
+          try {
+            const adminSnap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'session', 'admin'));
+            if (adminSnap.exists() && adminSnap.data()?.unlocked === true) {
+              isAdminUnlocked = true;
+              await savePersistentState('isAdminUnlocked', true);
+            }
+          } catch (e) {
+            // Keep local persisted state if offline
+          }
+
+          updateAuthUI();
+          startRealtimeListeners();
+        });
+      } catch (err) {
+        console.error('Firebase initialization error:', err);
+      }
+    }
+
+    initApp();
+  </script>
+</body>
+</html>
